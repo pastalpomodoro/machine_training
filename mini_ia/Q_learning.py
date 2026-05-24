@@ -47,7 +47,6 @@ for i in range(len(env.grid)):
     for j in range(len(env.grid[0])):
         if env.grid[i][j] == -1:
             bombs.append(Bomb(scale, j, i))
-# bomb = Bomb(scale, 1, 1)
 
 moveTime = 0
 moveTimeDelay = 0
@@ -139,7 +138,6 @@ while running:
                 at = take_action(st, Q, 0.0)
                 stp1, r = env.move(at)
                 st = stp1
-                # print(st, at)
             moveTime = 0
     texte = font.render(f, True, (255, 255, 255))
     screen.blit(texte, (200, HEIGHT+10))
