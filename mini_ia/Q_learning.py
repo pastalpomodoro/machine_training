@@ -65,6 +65,16 @@ at = 4
 r = 0
 f = "Try: waiting"
 
+for i in range(300):
+    st = env.reset()
+    while not env.is_finished():
+        at = take_action(st, Q, 0.6)
+        stp1, r = env.move(at)
+        atp1 = take_action(stp1, Q, 0.0)
+        Q[st][at] = Q[st][at] + 0.1*(r + 0.9*Q[stp1][atp1] - Q[st][at])
+        st = stp1
+    trys+=1
+print_Q(Q)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -95,35 +105,36 @@ while running:
     screen.blit(texte, (10, HEIGHT+10))
     moveTime += dt
     if moveTime >= moveTimeDelay: 
-        if not defeat and trys < 150:
-            if (env.is_finished()):
-                st = env.reset()
-                trys+=1
-                print_Q(Q)
-            else:
-                at = take_action(st, Q, 0.6)
-                stp1, r = env.move(at)
-                atp1 = take_action(stp1, Q, 0.0)
-                Q[st][at] = Q[st][at] + 0.1*(r + 0.9*Q[stp1][atp1] - Q[st][at])
-                st = stp1
-                if at == 0:
-                    f = "Try: UP"
-                elif at == 1:
-                    f = "Try: DOWN"
-                elif at == 2:
-                    f = "Try: LEFT"
-                else:
-                    f = "Try: RIGHT"
-                print_Q(Q)
-            moveTime = 0
-        elif not defeat:
+        # if not defeat and trys < 150:
+        #     if (env.is_finished()):
+        #         st = env.reset()
+        #         trys+=1
+        #         print_Q(Q)
+        #     else:
+        #         at = take_action(st, Q, 0.6)
+        #         stp1, r = env.move(at)
+        #         atp1 = take_action(stp1, Q, 0.0)
+        #         Q[st][at] = Q[st][at] + 0.1*(r + 0.9*Q[stp1][atp1] - Q[st][at])
+        #         st = stp1
+        #         if at == 0:
+        #             f = "Try: UP"
+        #         elif at == 1:
+        #             f = "Try: DOWN"
+        #         elif at == 2:
+        #             f = "Try: LEFT"
+        #         else:
+        #             f = "Try: RIGHT"
+        #         print_Q(Q)
+        #     moveTime = 0
+        if not defeat:
             if env.is_finished():
                 st = env.reset()
             else:
                 at = take_action(st, Q, 0.0)
                 stp1, r = env.move(at)
                 st = stp1
-                print(st, at)
+                # print(st, at)
+            moveTime = 0
     texte = font.render(f, True, (255, 255, 255))
     screen.blit(texte, (200, HEIGHT+10))
 
