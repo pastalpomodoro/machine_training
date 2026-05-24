@@ -57,6 +57,7 @@ st = env.get_st()
 
 font = pygame.font.Font(None, 30)
 trys = 1
+maxTrys = 1000
 defeat = False
 defeat_time = 0
 defeat_timeDelay = 1.7
@@ -66,7 +67,9 @@ f = "Try: waiting"
 
 steps = 0
 
-for i in range(300):
+eps = max(0.01, 1 - 0 / 150)
+
+for i in range(maxTrys):
     st = env.reset()
     esp = max(0.01, 1 - i / 150)
     steps = 0
@@ -110,11 +113,12 @@ while running:
     screen.blit(texte, (10, HEIGHT+10))
     moveTime += dt
     if moveTime >= moveTimeDelay: 
-        # if not defeat and trys < 150:
+        # if not defeat and trys < maxTrys:
         #     if (env.is_finished()):
         #         st = env.reset()
         #         trys+=1
         #         print_Q(Q)
+        #         eps = max(0.01, 1 - trys/150)
         #     else:
         #         at = take_action(st, Q, 0.6)
         #         stp1, r = env.move(at)
@@ -129,7 +133,7 @@ while running:
         #             f = "Try: LEFT"
         #         else:
         #             f = "Try: RIGHT"
-        #         print_Q(Q)
+        #         # print_Q(Q)
         #     moveTime = 0
         if not defeat:
             if env.is_finished():
@@ -137,6 +141,7 @@ while running:
             else:
                 at = take_action(st, Q, 0.0)
                 stp1, r = env.move(at)
+                atp1 = take_action(stp1, Q, 0.0)
                 st = stp1
             moveTime = 0
     texte = font.render(f, True, (255, 255, 255))
