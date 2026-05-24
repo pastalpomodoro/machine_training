@@ -65,15 +65,21 @@ at = 4
 r = 0
 f = "Try: waiting"
 
+steps = 0
+
 for i in range(300):
     st = env.reset()
+    esp = max(0.01, 1 - i / 150)
+    steps = 0
     while not env.is_finished():
-        at = take_action(st, Q, 0.6)
+        at = take_action(st, Q, esp)
         stp1, r = env.move(at)
         atp1 = take_action(stp1, Q, 0.0)
         Q[st][at] = Q[st][at] + 0.1*(r + 0.9*Q[stp1][atp1] - Q[st][at])
         st = stp1
+        steps += 1
     trys+=1
+
 print_Q(Q)
 while running:
     for event in pygame.event.get():
@@ -137,6 +143,8 @@ while running:
             moveTime = 0
     texte = font.render(f, True, (255, 255, 255))
     screen.blit(texte, (200, HEIGHT+10))
+    texte = font.render("steps: " + str(steps), True, (255, 255, 255))
+    screen.blit(texte, (400, HEIGHT+10))
 
     pygame.display.flip()
 
